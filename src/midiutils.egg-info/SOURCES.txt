@@ -1,0 +1,10 @@
+README.md
+pyproject.toml
+src/midiutils/__init__.py
+src/midiutils/midi_preprocessor.py
+src/midiutils/types.py
+src/midiutils.egg-info/PKG-INFO
+src/midiutils.egg-info/SOURCES.txt
+src/midiutils.egg-info/dependency_links.txt
+src/midiutils.egg-info/requires.txt
+src/midiutils.egg-info/top_level.txt
