@@ -1,4 +1,5 @@
 """Extracts events from a midifile."""
+
 import os
 from collections import defaultdict
 from pathlib import Path
@@ -88,8 +89,9 @@ class MidiPreprocessor:
       previous_note_map[current_note.note] = current_note
 
   def get_midi_events(
-    self, midi_path: Path, max_note_length: int
+    self, midi_path: Path, max_note_length: int = 100
   ) -> List[NoteEvent]:
+    self.events = []
     self._extract_midi_objects(midi_path)
     self._trim_long_notes(max_note_length=max_note_length)
     self._fix_sequential_notes()
