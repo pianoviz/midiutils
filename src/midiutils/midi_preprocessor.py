@@ -3,7 +3,7 @@
 import os
 from collections import defaultdict
 from pathlib import Path
-from typing import Dict, Iterable, List, Union, cast
+from typing import Dict, Iterable, List, Literal, Union, cast
 
 from mido import Message, MidiTrack
 from mido.midifiles.meta import (
@@ -19,9 +19,14 @@ class MidiPreprocessor:
     self.events: List[NoteEvent] = []
 
   def _initialize_note(
-    self, temp: Dict[int, NoteEvent | None], note: int, velocity: int, time: int
+    self,
+    temp: Dict[int, NoteEvent | None],
+    note: int,
+    velocity: int,
+    time: int,
+    hand: Literal["left", "right"],
   ) -> None:
-    temp_note = NoteEvent(note, velocity, time)
+    temp_note = NoteEvent(note, velocity, time, hand=hand)
     temp[note] = temp_note
 
   def _handle_note_off(
@@ -36,7 +41,9 @@ class MidiPreprocessor:
         temp[msg_note] = None
 
   def _preprocess_track(
-    self, track: Iterable[Union[Message, MetaMessage]]
+    self,
+    track: Iterable[Union[Message, MetaMessage]],
+    hand: Literal["right", "left"],
   ) -> None:
     time: int = 0  # The cumulative time across the whole song
     active_notes: Dict[int, NoteEvent | None] = {}
@@ -51,7 +58,7 @@ class MidiPreprocessor:
       note = cast(int, msg.note)  # type: ignore
       msg_type = cast(str, msg.type)  # type: ignore
       if msg_type == "note_on" and velocity != 0:  # Starting note
-        self._initialize_note(active_notes, note, velocity, time)
+        self._initialize_note(active_notes, note, velocity, time, hand)
       elif (
         msg_type == "note_on" and velocity == 0
       ):  # Note on with velocity 0 is note off
@@ -64,8 +71,9 @@ class MidiPreprocessor:
     mid: MidiFile = MidiFile(midi_path)
     # Validate and ensure tracks are of type MidiTrack
     tracks = cast(List[MidiTrack], mid.tracks)  # type: ignore
-    for track in tracks:
-      self._preprocess_track(track)
+    for i, track in enumerate(tracks):  # type: ignore
+      hand = "right" if i == 1 else "left"
+      self._preprocess_track(track, hand)
     self.events = sorted(self.events, key=lambda x: x.start)
 
   def _trim_long_notes(self, max_note_length: int) -> None:
