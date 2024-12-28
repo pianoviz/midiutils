@@ -1,3 +1,5 @@
+.editorconfig
+.gitignore
 README.md
 pyproject.toml
 src/midiutils/__init__.py
@@ -8,3 +10,5 @@ src/midiutils.egg-info/SOURCES.txt
 src/midiutils.egg-info/dependency_links.txt
 src/midiutils.egg-info/requires.txt
 src/midiutils.egg-info/top_level.txt
+tests/test_midi_preprocessor.py
+tests/resources/cut_liszt.mid
