@@ -3,13 +3,16 @@ requires = ["setuptools", "setuptools-scm"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "midiutils"
+name = "midiutils-python"
 description = "A collection of utilities for working with MIDI files built on top of mido."
 readme = "README.md"
-version = "0.0.1"
+dynamic = ["version"]
 authors = [{name = "Oscar Andersson", email = "oscar.966484@gmail.com"}]
 license = { file = "LICENSE" }
 dependencies = ["mido==1.3.2"]
+
+[project.urls]
+"Source" = "https://github.com/pianoviz/midiutils"
 
 [project.optional-dependencies]
 dev = ["ruff", "pytest"]
