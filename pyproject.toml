@@ -11,6 +11,8 @@ authors = [{name = "Oscar Andersson", email = "oscar.966484@gmail.com"}]
 license = { file = "LICENSE" }
 dependencies = ["mido==1.3.2"]
 
+[tool.setuptools_scm]
+
 [project.urls]
 "Source" = "https://github.com/pianoviz/midiutils"
 
