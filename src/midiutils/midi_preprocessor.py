@@ -6,16 +6,14 @@ from pathlib import Path
 from typing import Dict, Iterable, List, Literal, Union, cast
 
 from mido import Message, MidiTrack
-from mido.midifiles.meta import (
-  MetaMessage,  # Import MetaMessage for handling meta messages
-)
+from mido.midifiles.meta import MetaMessage
 from mido.midifiles.midifiles import MidiFile
 
 from midiutils.types import NoteEvent
 
 
 class MidiPreprocessor:
-  def __init__(self):
+  def __init__(self) -> None:
     self.events: List[NoteEvent] = []
 
   def _initialize_note(
@@ -48,15 +46,13 @@ class MidiPreprocessor:
     time: int = 0  # The cumulative time across the whole song
     active_notes: Dict[int, NoteEvent | None] = {}
     for _, msg in enumerate(track):
-      time_t: int = cast(int, msg.time)  # type: ignore
+      time_t = msg.time
       time += time_t
       # Skip meta messages and unsupported types
       if isinstance(msg, MetaMessage) or not hasattr(msg, "note"):
         continue
-      note = cast(int, msg.note)  # type: ignore
-      velocity = cast(int, msg.velocity)  # type: ignore
-      note = cast(int, msg.note)  # type: ignore
-      msg_type = cast(str, msg.type)  # type: ignore
+      note, velocity, note = msg.note, msg.velocity, msg.note
+      msg_type = cast(str, msg.type)
       if msg_type == "note_on" and velocity != 0:  # Starting note
         self._initialize_note(active_notes, note, velocity, time, hand)
       elif (
@@ -67,12 +63,16 @@ class MidiPreprocessor:
         self._handle_note_off(active_notes, note, time)
 
   def _extract_midi_objects(self, midi_path: Path) -> None:
+    """Extracts the notes and pedal events from a midi file
+    The note from channel 0 is assigned to the left hand and the notes from
+    channel 1 are assigned to the right hand
+    """
     # Read the MIDI file with mido
     mid: MidiFile = MidiFile(midi_path)
     # Validate and ensure tracks are of type MidiTrack
-    tracks = cast(List[MidiTrack], mid.tracks)  # type: ignore
-    for i, track in enumerate(tracks):  # type: ignore
-      hand = "right" if i == 1 else "left"
+    tracks = cast(List[MidiTrack], mid.tracks)
+    for i, track in enumerate(tracks):
+      hand: Literal["right", "left"] = "right" if i == 1 else "left"
       self._preprocess_track(track, hand)
     self.events = sorted(self.events, key=lambda x: x.start)
 
@@ -107,7 +107,7 @@ class MidiPreprocessor:
 
   def get_ticks_per_beat(self, midi_path: Path) -> int:
     mid = MidiFile(midi_path)
-    return mid.ticks_per_beat
+    return int(mid.ticks_per_beat)
 
 
 if __name__ == "__main__":

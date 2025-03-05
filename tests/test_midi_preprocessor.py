@@ -12,7 +12,7 @@ class TestMidiProcessor(unittest.TestCase):
       os.path.dirname(__file__), "resources/cut_liszt.mid"
     )
 
-  def test_extract_notes(self):
+  def test_extract_notes(self) -> None:
     mp = MidiPreprocessor()
     note_events = mp.get_midi_events(midi_path=Path(self.mid_path))
     assert isinstance(note_events[0], NoteEvent)
