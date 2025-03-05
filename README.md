@@ -7,7 +7,7 @@ file into a list of notes with the start time and end time of each note.
 ## Installation
 
 ```bash
-pip install midiutils
+pip install midiutils-python
 ```
 
 from source, clone the repository and run the following command
