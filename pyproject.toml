@@ -28,6 +28,6 @@ select = [
     "N", # names
     # "D", # docstrings
 ]
-line-length = 80
+line-length = 120
 indent-width = 2
 

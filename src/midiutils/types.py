@@ -14,7 +14,7 @@ class CustomMessage:
     self.end: int = 0
 
   def set_end(self, end: int) -> None:
-    self.end = end - self.start
+    self.end = end
 
   def trim_note(self, duration: int):
     self.end = self.start + duration
